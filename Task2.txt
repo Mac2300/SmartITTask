@@ -1,0 +1,104 @@
+
+
+------Table Structures
+
+CREATE TABLE employee_projects (
+    employee_id INT,
+    project_id INT,
+    role VARCHAR(100),
+    PRIMARY KEY (employee_id, project_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
+    FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+------Sorting
+
+SELECT * FROM employees ORDER BY name;
+
+SELECT * FROM leave_requests ORDER BY start_date;
+
+SELECT * FROM approval_requests ORDER BY request_date;
+
+SELECT * FROM projects ORDER BY project_name;
+
+
+------Filtring
+
+
+SELECT * FROM employees WHERE status = 'active';
+
+SELECT * FROM leave_requests WHERE status = 'approved';
+
+SELECT * FROM approval_requests WHERE status = 'pending';
+
+SELECT * FROM projects WHERE start_date > '2024-01-01';
+
+
+------Search
+
+
+
+SELECT * FROM employees WHERE name LIKE '%John%';
+
+SELECT * FROM leave_requests WHERE request_id = 123;
+
+SELECT * FROM approval_requests WHERE approval_id = 456;
+
+SELECT * FROM projects WHERE project_name LIKE '%Project%';
+
+
+------Opening lines
+
+
+SELECT * FROM employees WHERE employee_id = 1;
+
+SELECT * FROM leave_requests WHERE request_id = 123;
+
+SELECT * FROM approval_requests WHERE approval_id = 456;
+
+SELECT * FROM projects WHERE project_id = 789;
+
+
+------Assigning employees to the project
+
+
+INSERT INTO employee_projects (employee_id, project_id, role)
+VALUES (1, 789, 'Developer');
+
+
+------Approve and reject requests
+
+
+
+UPDATE approval_requests
+SET status = 'approved'
+WHERE approval_id = 456;
+
+UPDATE leave_requests
+SET status = 'approved'
+WHERE request_id = (SELECT leave_request_id FROM approval_requests WHERE approval_id = 456);
+
+UPDATE approval_requests
+SET status = 'rejected'
+WHERE approval_id = 456;
+
+UPDATE leave_requests
+SET status = 'rejected'
+WHERE request_id = (SELECT leave_request_id FROM approval_requests WHERE approval_id = 456);
+
+
+------Adding, updating and deactivating projects
+
+
+
+INSERT INTO projects (project_id, project_name, description, start_date, end_date)
+VALUES (789, 'New Project', 'Description of the project', '2024-07-01', '2024-12-31');
+
+UPDATE projects
+SET project_name = 'Updated Project Name', description = 'Updated description'
+WHERE project_id = 789;
+
+UPDATE projects
+SET end_date = CURDATE()
+WHERE project_id = 789;
+Powyższe przykłady obejmują podstawowe operacje SQL, które spełniają wymagania Twojego zadania dla kierownika projektu. W przypadku dodatkowych szczegółów lub pytań, daj znać!

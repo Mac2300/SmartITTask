@@ -1,0 +1,73 @@
+
+------Sorting
+
+
+SELECT * FROM leave_requests WHERE employee_id = 1 ORDER BY request_id;
+
+SELECT p.* FROM projects p
+JOIN employee_projects ep ON p.project_id = ep.project_id
+WHERE ep.employee_id = 1
+ORDER BY p.project_name;
+
+
+------Filtring
+
+
+SELECT * FROM leave_requests WHERE employee_id = 1 AND status = 'approved';
+
+SELECT p.* FROM projects p
+JOIN employee_projects ep ON p.project_id = ep.project_id
+WHERE ep.employee_id = 1 AND p.start_date > '2024-01-01';
+
+
+------Search
+
+
+SELECT * FROM leave_requests WHERE employee_id = 1 AND request_id = 123;
+
+SELECT p.* FROM projects p
+JOIN employee_projects ep ON p.project_id = ep.project_id
+WHERE ep.employee_id = 1 AND p.project_name LIKE '%Project%';
+
+
+
+------Opening a new and existing leave request
+
+
+SELECT * FROM leave_requests WHERE employee_id = 1 AND request_id = 123;
+
+
+------Creating and updating a leave request
+
+
+INSERT INTO leave_requests (request_id, employee_id, start_date, end_date, status)
+VALUES (123, 1, '2024-07-10', '2024-07-20', 'Draft');
+
+UPDATE leave_requests
+SET start_date = '2024-07-15', end_date = '2024-07-25', status = 'Draft'
+WHERE request_id = 123 AND employee_id = 1;
+
+
+
+------Approval and cancellation of leave requests
+
+
+UPDATE leave_requests
+SET status = 'Submitted'
+WHERE request_id = 123 AND employee_id = 1;
+
+INSERT INTO approval_requests (approval_id, leave_request_id, request_date, status)
+VALUES (456, 123, CURDATE(), 'Pending');
+
+INSERT INTO approval_requests (approval_id, leave_request_id, request_date, status)
+SELECT nextval('approval_seq'), 123, CURDATE(), 'Pending'
+FROM employee_projects
+WHERE employee_id = 1;
+
+UPDATE leave_requests
+SET status = 'Canceled'
+WHERE request_id = 123 AND employee_id = 1;
+
+UPDATE approval_requests
+SET status = 'Canceled'
+WHERE leave_request_id = 123;
